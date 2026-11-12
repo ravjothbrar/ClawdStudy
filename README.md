@@ -5,6 +5,8 @@ Put on [Claude FM](https://www.youtube.com/watch?v=tRsQsTMvPNg), start the timer
 watch Clawd's Archipelago grow from a single hut into 30 places: a café, a library, a harbour, a lighthouse,
 a city skyline, a science isle, a mountain, and finally a rocket to the moon.
 
+![The full archipelago at night](docs/world-night.png)
+
 > Unofficial fan project. Not affiliated with Anthropic. Claude FM streams from YouTube.
 
 ## How it works
@@ -21,6 +23,10 @@ a city skyline, a science isle, a mountain, and finally a rocket to the moon.
 - **Local-first.** Progress, tasks and settings are kept in `localStorage`. Settings has export and import.
 
 Keys: `Space` start/pause · `C` find Clawd · `O` overview · `M` play/pause music.
+
+| Village (6 pomodoros) | Everything (30) |
+|---|---|
+| ![](docs/village.png) | ![](docs/world-day.png) |
 
 ## Run it
 
