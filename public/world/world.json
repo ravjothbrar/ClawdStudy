@@ -1,0 +1,1316 @@
+{
+ "version": 1,
+ "regions": [
+  {
+   "id": 0,
+   "file": "world/region_00.glb",
+   "chapter": "Start",
+   "title": "Clawd's Hut",
+   "blurb": "Where it all begins: a desk, a radio tuned to Claude FM, and a plant.",
+   "parent": null,
+   "door": [
+    0,
+    0,
+    2.3
+   ],
+   "spot": [
+    -0.35,
+    0,
+    1.3
+   ],
+   "look": [
+    -0.35,
+    0,
+    6
+   ],
+   "via": [],
+   "action": "dance",
+   "acc": "headphones",
+   "focus": [
+    0.0,
+    -0.487,
+    -0.0
+   ],
+   "radius": 5.57,
+   "boxes": 55
+  },
+  {
+   "id": 1,
+   "file": "world/region_01.glb",
+   "chapter": "Village",
+   "title": "Lamplit Path",
+   "blurb": "A winding path east, with lamps for late-night sessions.",
+   "parent": 0,
+   "door": [
+    5,
+    0,
+    0.8
+   ],
+   "spot": [
+    6.0,
+    0,
+    0.9
+   ],
+   "look": [
+    6.0,
+    0,
+    6
+   ],
+   "via": [],
+   "action": "wave",
+   "acc": null,
+   "focus": [
+    5.951,
+    -0.426,
+    0.099
+   ],
+   "radius": 5.56,
+   "boxes": 50
+  },
+  {
+   "id": 2,
+   "file": "world/region_02.glb",
+   "chapter": "Village",
+   "title": "Second Coffee Caf\u00e9",
+   "blurb": "Books, red string, a second coffee. Clawd's favourite table.",
+   "parent": 1,
+   "door": [
+    5,
+    0,
+    -2.6
+   ],
+   "spot": [
+    5.4,
+    0,
+    -4.2
+   ],
+   "look": [
+    5.4,
+    0,
+    3
+   ],
+   "via": [],
+   "action": "sip",
+   "acc": "mug",
+   "focus": [
+    6.0,
+    0.381,
+    -6.0
+   ],
+   "radius": 6.32,
+   "boxes": 47
+  },
+  {
+   "id": 3,
+   "file": "world/region_03.glb",
+   "chapter": "Village",
+   "title": "The Library",
+   "blurb": "Stacks of books in every colour. Sketch the problem first.",
+   "parent": 0,
+   "door": [
+    0,
+    0,
+    -3.9
+   ],
+   "spot": [
+    0.7,
+    0,
+    -4.1
+   ],
+   "look": [
+    0.7,
+    0,
+    3
+   ],
+   "via": [
+    [
+     2.6,
+     0,
+     2.2
+    ],
+    [
+     2.6,
+     0,
+     -3.9
+    ]
+   ],
+   "action": "read",
+   "acc": "book",
+   "focus": [
+    0.01,
+    0.242,
+    -6.0
+   ],
+   "radius": 6.06,
+   "boxes": 49
+  },
+  {
+   "id": 4,
+   "file": "world/region_04.glb",
+   "chapter": "Village",
+   "title": "Lily Pond",
+   "blurb": "A little arched bridge over a quiet pond. Good for thinking.",
+   "parent": 0,
+   "door": [
+    -3.6,
+    0,
+    0.5
+   ],
+   "spot": [
+    -6.2,
+    0.45,
+    0.2
+   ],
+   "look": [
+    -6.2,
+    0,
+    6
+   ],
+   "via": [],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    -6.076,
+    -0.739,
+    -0.126
+   ],
+   "radius": 5.18,
+   "boxes": 63
+  },
+  {
+   "id": 5,
+   "file": "world/region_05.glb",
+   "chapter": "Village",
+   "title": "Flower Garden",
+   "blurb": "Rows of flowers and a little fountain. Take a breath.",
+   "parent": 3,
+   "door": [
+    -3.6,
+    0,
+    -4.4
+   ],
+   "spot": [
+    -5.2,
+    0,
+    -4.6
+   ],
+   "look": [
+    -5.2,
+    0,
+    3
+   ],
+   "via": [],
+   "action": "wave",
+   "acc": null,
+   "focus": [
+    -6.054,
+    -0.437,
+    -6.264
+   ],
+   "radius": 5.54,
+   "boxes": 99
+  },
+  {
+   "id": 6,
+   "file": "world/region_06.glb",
+   "chapter": "Village",
+   "title": "Claude FM Tower",
+   "blurb": "The radio tower that broadcasts Claude FM to every island.",
+   "parent": 0,
+   "door": [
+    0,
+    0,
+    3.6
+   ],
+   "spot": [
+    -0.4,
+    0,
+    4.4
+   ],
+   "look": [
+    -0.4,
+    0,
+    10
+   ],
+   "via": [],
+   "action": "dance",
+   "acc": "headphones",
+   "focus": [
+    0.0,
+    3.846,
+    6.0
+   ],
+   "radius": 10.7,
+   "boxes": 159
+  },
+  {
+   "id": 7,
+   "file": "world/region_07.glb",
+   "chapter": "Harbour",
+   "title": "Waterfall Cliffs",
+   "blurb": "A stream that tumbles off the island's edge.",
+   "parent": 1,
+   "door": [
+    9.6,
+    0,
+    0.8
+   ],
+   "spot": [
+    11.4,
+    0,
+    -1.8
+   ],
+   "look": [
+    14,
+    0,
+    -4
+   ],
+   "via": [],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    11.423,
+    -0.016,
+    -3.152
+   ],
+   "radius": 8.2,
+   "boxes": 34
+  },
+  {
+   "id": 8,
+   "file": "world/region_08.glb",
+   "chapter": "Harbour",
+   "title": "The Harbour",
+   "blurb": "A sandy lagoon, a wooden pier and two little sailboats.",
+   "parent": 7,
+   "door": [
+    15.2,
+    -3,
+    2.4
+   ],
+   "spot": [
+    18.0,
+    -2.85,
+    -2.6
+   ],
+   "look": [
+    18.0,
+    -3,
+    -9
+   ],
+   "via": [
+    [
+     12.2,
+     0,
+     2.4
+    ],
+    [
+     14.8,
+     -3,
+     2.4
+    ]
+   ],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    18.66,
+    -1.982,
+    -2.086
+   ],
+   "radius": 10.21,
+   "boxes": 44
+  },
+  {
+   "id": 9,
+   "file": "world/region_09.glb",
+   "chapter": "Harbour",
+   "title": "Lighthouse Point",
+   "blurb": "A striped lighthouse sweeping its beam across the sky.",
+   "parent": 8,
+   "door": [
+    25.6,
+    -3,
+    -6.5
+   ],
+   "spot": [
+    26.6,
+    -3,
+    -6.6
+   ],
+   "look": [
+    26.6,
+    -3,
+    0
+   ],
+   "via": [
+    [
+     24.3,
+     -3,
+     2.4
+    ],
+    [
+     24.3,
+     -3,
+     -6.5
+    ]
+   ],
+   "action": "wave",
+   "acc": null,
+   "focus": [
+    28.0,
+    0.551,
+    -8.0
+   ],
+   "radius": 9.43,
+   "boxes": 95
+  },
+  {
+   "id": 10,
+   "file": "world/region_10.glb",
+   "chapter": "Harbour",
+   "title": "Market Street",
+   "blurb": "Colourful stalls selling fruit, flowers and fresh ideas.",
+   "parent": 8,
+   "door": [
+    14.0,
+    -3,
+    -10.6
+   ],
+   "spot": [
+    16.4,
+    -3,
+    -12.0
+   ],
+   "look": [
+    16.4,
+    -3,
+    -5
+   ],
+   "via": [
+    [
+     13.8,
+     -3,
+     2.4
+    ],
+    [
+     13.8,
+     -3,
+     -10.6
+    ]
+   ],
+   "action": "wave",
+   "acc": null,
+   "focus": [
+    17.0,
+    -3.384,
+    -13.0
+   ],
+   "radius": 6.05,
+   "boxes": 77
+  },
+  {
+   "id": 11,
+   "file": "world/region_11.glb",
+   "chapter": "Harbour",
+   "title": "Seaside Station",
+   "blurb": "A tiny train loops the station. All aboard the study express.",
+   "parent": 8,
+   "door": [
+    15.2,
+    -3,
+    6.6
+   ],
+   "spot": [
+    14.8,
+    -2.75,
+    7.4
+   ],
+   "look": [
+    14.8,
+    -3,
+    14
+   ],
+   "via": [
+    [
+     15.2,
+     -3,
+     5.6
+    ]
+   ],
+   "action": "wave",
+   "acc": null,
+   "focus": [
+    19.0,
+    -2.216,
+    9.0
+   ],
+   "radius": 8.05,
+   "boxes": 91
+  },
+  {
+   "id": 12,
+   "file": "world/region_12.glb",
+   "chapter": "Harbour",
+   "title": "Windmill Fields",
+   "blurb": "Golden fields and a windmill turning in the sea breeze.",
+   "parent": 8,
+   "door": [
+    25.6,
+    -3,
+    3.0
+   ],
+   "spot": [
+    26.4,
+    -3,
+    2.0
+   ],
+   "look": [
+    26.4,
+    -3,
+    8
+   ],
+   "via": [
+    [
+     24.3,
+     -3,
+     2.4
+    ]
+   ],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    27.675,
+    -1.825,
+    3.0
+   ],
+   "radius": 7.02,
+   "boxes": 60
+  },
+  {
+   "id": 13,
+   "file": "world/region_13.glb",
+   "chapter": "Skyline",
+   "title": "Construction Site",
+   "blurb": "Clawd's hard hat goes on. Time to build something bigger.",
+   "parent": 3,
+   "door": [
+    2.6,
+    0,
+    -13.6
+   ],
+   "spot": [
+    1.6,
+    0,
+    -14.6
+   ],
+   "look": [
+    1.6,
+    0,
+    -8
+   ],
+   "via": [
+    [
+     2.6,
+     0,
+     -3.9
+    ],
+    [
+     2.6,
+     0,
+     -9.0
+    ]
+   ],
+   "action": "hammer",
+   "acc": "hardhat",
+   "focus": [
+    1.375,
+    3.294,
+    -14.025
+   ],
+   "radius": 9.41,
+   "boxes": 119
+  },
+  {
+   "id": 14,
+   "file": "world/region_14.glb",
+   "chapter": "Skyline",
+   "title": "Glass Tower",
+   "blurb": "Fourteen floors of focus. Windows light up as night falls.",
+   "parent": 13,
+   "door": [
+    7.6,
+    0,
+    -14.0
+   ],
+   "spot": [
+    8.8,
+    0,
+    -14.2
+   ],
+   "look": [
+    8.8,
+    0,
+    -8
+   ],
+   "via": [],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    9.328,
+    5.61,
+    -16.172
+   ],
+   "radius": 10.54,
+   "boxes": 88
+  },
+  {
+   "id": 15,
+   "file": "world/region_15.glb",
+   "chapter": "Skyline",
+   "title": "Brick Tower",
+   "blurb": "A sturdy terracotta tower with a lot of lit windows.",
+   "parent": 13,
+   "door": [
+    -3.4,
+    0,
+    -14.0
+   ],
+   "spot": [
+    -4.6,
+    0,
+    -13.9
+   ],
+   "look": [
+    -4.6,
+    0,
+    -8
+   ],
+   "via": [],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    -5.5,
+    3.972,
+    -16.0
+   ],
+   "radius": 8.83,
+   "boxes": 70
+  },
+  {
+   "id": 16,
+   "file": "world/region_16.glb",
+   "chapter": "Skyline",
+   "title": "Clawd Spire",
+   "blurb": "The tallest building in the archipelago. Clawd's own landmark.",
+   "parent": 13,
+   "door": [
+    2.0,
+    0,
+    -19.6
+   ],
+   "spot": [
+    2.0,
+    0.06,
+    -19.9
+   ],
+   "look": [
+    2.0,
+    0,
+    -14
+   ],
+   "via": [],
+   "action": "celebrate",
+   "acc": "partyhat",
+   "focus": [
+    2.019,
+    8.504,
+    -22.53
+   ],
+   "radius": 15.0,
+   "boxes": 91
+  },
+  {
+   "id": 17,
+   "file": "world/region_17.glb",
+   "chapter": "Skyline",
+   "title": "Rooftop Park",
+   "blurb": "A park in the clouds, and a garden on the Brick Tower roof.",
+   "parent": 16,
+   "door": [
+    -3.5,
+    0,
+    -20.5
+   ],
+   "spot": [
+    -5.6,
+    0,
+    -20.8
+   ],
+   "look": [
+    -5.6,
+    0,
+    -14
+   ],
+   "via": [],
+   "action": "wave",
+   "acc": null,
+   "focus": [
+    -5.381,
+    3.634,
+    -20.647
+   ],
+   "radius": 9.95,
+   "boxes": 61
+  },
+  {
+   "id": 18,
+   "file": "world/region_18.glb",
+   "chapter": "Skyline",
+   "title": "Rope Bridge",
+   "blurb": "A swaying rope bridge to the mysterious islands to the west.",
+   "parent": 17,
+   "door": [
+    -11.0,
+    0.45,
+    -23.0
+   ],
+   "spot": [
+    -11.0,
+    0.45,
+    -23.0
+   ],
+   "look": [
+    -11.0,
+    0.4,
+    -16
+   ],
+   "via": [
+    [
+     -7.6,
+     0,
+     -23.0
+    ]
+   ],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    -11.0,
+    0.5,
+    -23.075
+   ],
+   "radius": 5.22,
+   "boxes": 62
+  },
+  {
+   "id": 19,
+   "file": "world/region_19.glb",
+   "chapter": "Science Isle",
+   "title": "The Lab",
+   "blurb": "Full lab coat. Chalkboards, a Tesla coil, and a humming atom.",
+   "parent": 18,
+   "door": [
+    -14.6,
+    2,
+    -23.0
+   ],
+   "spot": [
+    -16.0,
+    2,
+    -20.4
+   ],
+   "look": [
+    -16.0,
+    2,
+    -14
+   ],
+   "via": [],
+   "action": "hammer",
+   "acc": "goggles",
+   "focus": [
+    -18.0,
+    1.177,
+    -22.0
+   ],
+   "radius": 6.27,
+   "boxes": 68
+  },
+  {
+   "id": 20,
+   "file": "world/region_20.glb",
+   "chapter": "Science Isle",
+   "title": "Observatory",
+   "blurb": "A white dome with a brass telescope pointed at the stars.",
+   "parent": 19,
+   "door": [
+    -22.6,
+    2,
+    -17.0
+   ],
+   "spot": [
+    -23.6,
+    2,
+    -13.6
+   ],
+   "look": [
+    -23.6,
+    2,
+    -8
+   ],
+   "via": [
+    [
+     -16.0,
+     2,
+     -19.6
+    ],
+    [
+     -21.8,
+     2,
+     -19.0
+    ]
+   ],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    -25.147,
+    2.001,
+    -15.147
+   ],
+   "radius": 5.7,
+   "boxes": 74
+  },
+  {
+   "id": 21,
+   "file": "world/region_21.glb",
+   "chapter": "Science Isle",
+   "title": "Balloon Launch",
+   "blurb": "A striped hot-air balloon. Look how far you've come.",
+   "parent": 19,
+   "door": [
+    -16.0,
+    2,
+    -17.4
+   ],
+   "spot": [
+    -17.0,
+    2.0,
+    -13.0
+   ],
+   "look": [
+    -17.0,
+    2,
+    -8
+   ],
+   "via": [
+    [
+     -16.0,
+     2,
+     -19.6
+    ]
+   ],
+   "action": "wave",
+   "acc": null,
+   "focus": [
+    -17.0,
+    4.817,
+    -15.0
+   ],
+   "radius": 8.58,
+   "boxes": 80
+  },
+  {
+   "id": 22,
+   "file": "world/region_22.glb",
+   "chapter": "Science Isle",
+   "title": "Ancient Ruins",
+   "blurb": "Mossy columns and a glowing rune stone. Who built these?",
+   "parent": 19,
+   "door": [
+    -22.6,
+    2,
+    -21.5
+   ],
+   "spot": [
+    -24.0,
+    2,
+    -21.8
+   ],
+   "look": [
+    -25,
+    2,
+    -23.5
+   ],
+   "via": [
+    [
+     -16.0,
+     2,
+     -19.6
+    ],
+    [
+     -22.0,
+     2,
+     -19.6
+    ]
+   ],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    -25.0,
+    1.825,
+    -22.5
+   ],
+   "radius": 6.55,
+   "boxes": 35
+  },
+  {
+   "id": 23,
+   "file": "world/region_23.glb",
+   "chapter": "Science Isle",
+   "title": "Greenhouse",
+   "blurb": "Giant flowers under a glass dome. Ideas need watering too.",
+   "parent": 21,
+   "door": [
+    -17.0,
+    2,
+    -11.4
+   ],
+   "spot": [
+    -15.4,
+    2,
+    -8.4
+   ],
+   "look": [
+    -15.4,
+    2,
+    -2
+   ],
+   "via": [],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    -18.0,
+    1.052,
+    -9.0
+   ],
+   "radius": 6.05,
+   "boxes": 111
+  },
+  {
+   "id": 24,
+   "file": "world/region_24.glb",
+   "chapter": "Science Isle",
+   "title": "Rocket Workshop",
+   "blurb": "Parts, plans and a prototype. Something big is coming.",
+   "parent": 23,
+   "door": [
+    -22.4,
+    2,
+    -8.0
+   ],
+   "spot": [
+    -23.4,
+    2,
+    -7.2
+   ],
+   "look": [
+    -23.4,
+    2,
+    -1
+   ],
+   "via": [
+    [
+     -21.5,
+     2,
+     -11.6
+    ]
+   ],
+   "action": "hammer",
+   "acc": "hardhat",
+   "focus": [
+    -25.0,
+    1.875,
+    -8.0
+   ],
+   "radius": 6.05,
+   "boxes": 52
+  },
+  {
+   "id": 25,
+   "file": "world/region_25.glb",
+   "chapter": "Summit",
+   "title": "Mountain Trail",
+   "blurb": "Pine forest and a campfire at the foot of the mountain.",
+   "parent": 4,
+   "door": [
+    -6.5,
+    0,
+    3.6
+   ],
+   "spot": [
+    -8.0,
+    0,
+    7.0
+   ],
+   "look": [
+    -7.6,
+    0,
+    8.0
+   ],
+   "via": [
+    [
+     -3.8,
+     0,
+     3.2
+    ]
+   ],
+   "action": "sleep",
+   "acc": "nightcap",
+   "focus": [
+    -12.808,
+    -0.945,
+    9.005
+   ],
+   "radius": 10.24,
+   "boxes": 115
+  },
+  {
+   "id": 26,
+   "file": "world/region_26.glb",
+   "chapter": "Summit",
+   "title": "The Peak",
+   "blurb": "A spiral trail to the snowy summit. Every step counts.",
+   "parent": 25,
+   "door": [
+    -15.5,
+    13.0,
+    9.9
+   ],
+   "spot": [
+    -15.5,
+    13.0,
+    9.9
+   ],
+   "look": [
+    -15.5,
+    13.0,
+    17.5
+   ],
+   "via": [
+    [
+     -8.0,
+     0,
+     5.0
+    ],
+    [
+     -9.842,
+     0,
+     9.658
+    ],
+    [
+     -9.842,
+     0.45,
+     9.058
+    ],
+    [
+     -10.343,
+     0.9,
+     7.584
+    ],
+    [
+     -11.207,
+     1.35,
+     6.346
+    ],
+    [
+     -12.344,
+     1.8,
+     5.427
+    ],
+    [
+     -13.648,
+     2.25,
+     4.879
+    ],
+    [
+     -15.004,
+     2.7,
+     4.721
+    ],
+    [
+     -16.304,
+     3.15,
+     4.94
+    ],
+    [
+     -17.448,
+     3.6,
+     5.493
+    ],
+    [
+     -18.356,
+     4.05,
+     6.311
+    ],
+    [
+     -18.974,
+     4.5,
+     7.31
+    ],
+    [
+     -19.275,
+     4.95,
+     8.396
+    ],
+    [
+     -19.258,
+     5.4,
+     9.475
+    ],
+    [
+     -18.953,
+     5.85,
+     10.46
+    ],
+    [
+     -18.409,
+     6.3,
+     11.28
+    ],
+    [
+     -17.691,
+     6.75,
+     11.881
+    ],
+    [
+     -16.875,
+     7.2,
+     12.235
+    ],
+    [
+     -16.039,
+     7.65,
+     12.336
+    ],
+    [
+     -15.256,
+     8.1,
+     12.202
+    ],
+    [
+     -14.587,
+     8.55,
+     11.869
+    ],
+    [
+     -14.077,
+     9.0,
+     11.388
+    ],
+    [
+     -13.753,
+     9.45,
+     10.82
+    ],
+    [
+     -13.62,
+     9.9,
+     10.227
+    ],
+    [
+     -13.666,
+     10.35,
+     9.668
+    ],
+    [
+     -13.862,
+     10.8,
+     9.191
+    ],
+    [
+     -14.166,
+     11.25,
+     8.831
+    ],
+    [
+     -14.529,
+     11.7,
+     8.609
+    ],
+    [
+     -15.1,
+     13.0,
+     10.3
+    ]
+   ],
+   "action": "celebrate",
+   "acc": "partyhat",
+   "focus": [
+    -15.231,
+    7.5,
+    9.155
+   ],
+   "radius": 9.5,
+   "boxes": 212
+  },
+  {
+   "id": 27,
+   "file": "world/region_27.glb",
+   "chapter": "Summit",
+   "title": "Sky Bridge",
+   "blurb": "A glowing bridge from the peak to a platform among the clouds.",
+   "parent": 26,
+   "door": [
+    -8.0,
+    12,
+    18.8
+   ],
+   "spot": [
+    -8.0,
+    12,
+    19.6
+   ],
+   "look": [
+    -8.0,
+    12,
+    26
+   ],
+   "via": [
+    [
+     -14.9,
+     13.0,
+     10.4
+    ]
+   ],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    -8.7,
+    11.524,
+    18.855
+   ],
+   "radius": 10.8,
+   "boxes": 64
+  },
+  {
+   "id": 28,
+   "file": "world/region_28.glb",
+   "chapter": "Summit",
+   "title": "Hot Spring Cabin",
+   "blurb": "A cosy cabin and a steaming hot spring. You've earned it.",
+   "parent": 25,
+   "door": [
+    -21.6,
+    0,
+    4.0
+   ],
+   "spot": [
+    -22.8,
+    0.0,
+    5.0
+   ],
+   "look": [
+    -22.8,
+    0,
+    12
+   ],
+   "via": [
+    [
+     -9.0,
+     0,
+     3.6
+    ],
+    [
+     -20.8,
+     0,
+     3.6
+    ]
+   ],
+   "action": "sleep",
+   "acc": "nightcap",
+   "focus": [
+    -24.526,
+    0.188,
+    7.125
+   ],
+   "radius": 6.76,
+   "boxes": 43
+  },
+  {
+   "id": 29,
+   "file": "world/region_29.glb",
+   "chapter": "Summit",
+   "title": "Aurora",
+   "blurb": "Ribbons of light across the night sky. Look up.",
+   "parent": 27,
+   "door": [
+    -8.0,
+    12,
+    18.8
+   ],
+   "spot": [
+    -7.0,
+    12,
+    19.8
+   ],
+   "look": [
+    -7.0,
+    17,
+    -34
+   ],
+   "via": [],
+   "action": "look",
+   "acc": null,
+   "focus": [
+    -7.0,
+    12,
+    19.8
+   ],
+   "radius": 17.0,
+   "boxes": 138
+  },
+  {
+   "id": 30,
+   "file": "world/region_30.glb",
+   "chapter": "Summit",
+   "title": "Moonshot",
+   "blurb": "The finale: a rocket on the edge of the sky. You did this.",
+   "parent": 27,
+   "door": [
+    -2.4,
+    12,
+    21.0
+   ],
+   "spot": [
+    -1.0,
+    12,
+    20.0
+   ],
+   "look": [
+    -1.0,
+    12,
+    14
+   ],
+   "via": [
+    [
+     -5.2,
+     12,
+     21.0
+    ]
+   ],
+   "action": "celebrate",
+   "acc": "partyhat",
+   "focus": [
+    -1.0,
+    12,
+    20.0
+   ],
+   "radius": 17.0,
+   "boxes": 181
+  }
+ ],
+ "center": [
+  1.43,
+  4.31,
+  -1.54
+ ],
+ "extent": 26.57
+}
