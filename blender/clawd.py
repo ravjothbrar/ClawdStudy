@@ -12,7 +12,7 @@ import bpy
 from mathutils import Euler, Quaternion
 
 sys.path.insert(0, str(Path(__file__).parent))
-from lib.voxel import Builder, export_glb, reset_scene  # noqa: E402
+from lib.voxel import Builder, col, export_glb, finish_mesh, reset_scene  # noqa: E402
 
 U = 0.2
 FPS = 30
@@ -37,8 +37,8 @@ for i, lx in enumerate(LEG_X):
         LEGS.append(name)
         BONES[name] = ((lx + 0.25 * U, yy, LEG_H), "body")
 
-CLAY = (0.851, 0.467, 0.341)
-EYE = (0.10, 0.09, 0.09)
+CLAY = (0.851, 0.467, 0.341)   # #D97757, Clawd orange (sRGB)
+EYE = (0.07, 0.06, 0.06)
 
 
 def build_mesh():
@@ -47,12 +47,12 @@ def build_mesh():
     # each bone gets its own part so we can assign vertex groups per part
     for key in ["body", "eyes", "nub_L", "nub_R", *LEGS]:
         b.part(key)
-    kw = dict(jitter=0.0, ao=0.9, drop=0.0)
-    # body (front face carries the eye sockets; eyes are inset boxes)
+    kw = dict(jitter=0.0, ao=1.0, drop=0.0, rough=(0.46, 0.0))
+    # body (front face carries the eye sockets; eyes are glossy slots set into it)
     b.box(-HALF_W, -HALF_D, BODY_Z0, HALF_W, HALF_D, BODY_Z1, CLAY, part="body", **kw)
     for ex in (-2.0 * U, 1.5 * U):
-        b.box(ex, -HALF_D - 0.02, BODY_Z0 + 2.0 * U, ex + 0.5 * U, -HALF_D + 0.05,
-              BODY_Z0 + 3.0 * U, EYE, part="eyes", **kw)
+        b.box(ex, -HALF_D - 0.006, BODY_Z0 + 2.0 * U, ex + 0.5 * U, -HALF_D + 0.05,
+              BODY_Z0 + 3.0 * U, EYE, part="eyes", jitter=0.0, ao=1.0, drop=0.0, rough=(0.12, 0.0))
     # nubs
     b.box(-HALF_W - 1 * U, -0.8 * U, BODY_Z0 + 1.0 * U, -HALF_W + 0.01, 0.8 * U,
           BODY_Z0 + 2.0 * U, CLAY, part="nub_L", **kw)
@@ -75,7 +75,7 @@ def build_accessories():
         acc[name] = (b, bone)
         return b
 
-    kw = dict(jitter=0.0, ao=0.9, drop=0.0)
+    kw = dict(jitter=0.0, ao=1.0, drop=0.0, rough=(0.4, 0.0))
     # headphones (navy band over the top, cups on the sides) - Claude FM look
     h = mk("headphones", "body")
     navy = (0.24, 0.33, 0.55)
@@ -158,11 +158,12 @@ def make_armature():
     return arm
 
 
-def skin(obj, arm, groups):
-    """groups: list of (bone name, vertex index list)."""
+def skin(obj, arm, groups, bevel=0.0):
+    """groups: list of (bone name, vertex index list). Bevels before binding."""
     for bone, idx in groups:
         vg = obj.vertex_groups.new(name=bone)
         vg.add(idx, 1.0, "REPLACE")
+    finish_mesh(obj, bevel=bevel, segments=3, uv=False)
     mod = obj.modifiers.new("Armature", "ARMATURE")
     mod.object = arm
     obj.parent = arm
@@ -174,7 +175,7 @@ def merged_body(b, arm):
 
     from lib.voxel import shared_material
 
-    verts, faces, cols, groups = [], [], [], []
+    verts, faces, cols, pbrs, groups = [], [], [], [], []
     for key, p in b.parts.items():
         if p.empty():
             continue
@@ -182,16 +183,19 @@ def merged_body(b, arm):
         verts += p.verts
         faces += [tuple(i + off for i in f) for f in p.faces]
         cols += p.cols
+        pbrs += p.pbrs
         groups.append((key, list(range(off, off + len(p.verts)))))
     me = bpy.data.meshes.new("clawd_body")
     me.from_pydata(verts, [], faces)
     ca = me.color_attributes.new("Col", "FLOAT_COLOR", "CORNER")
     for i, c in enumerate(cols):
-        ca.data[i].color = (*c, 1.0)
+        ca.data[i].color = (*c, 1.0)  # already linear (Builder.box converts)
+    pa = me.attributes.new("_pbr", "FLOAT2", "CORNER")
+    pa.data.foreach_set("vector", [v for rm in pbrs for v in rm])
     me.materials.append(shared_material())
     ob = bpy.data.objects.new("clawd_body", me)
     bpy.context.scene.collection.objects.link(ob)
-    skin(ob, arm, groups)
+    skin(ob, arm, groups, bevel=0.03)
     return ob
 
 
@@ -204,10 +208,12 @@ def acc_mesh(name, b, bone, arm):
     ca = me.color_attributes.new("Col", "FLOAT_COLOR", "CORNER")
     for i, c in enumerate(p.cols):
         ca.data[i].color = (*c, 1.0)
+    pa = me.attributes.new("_pbr", "FLOAT2", "CORNER")
+    pa.data.foreach_set("vector", [v for rm in p.pbrs for v in rm])
     me.materials.append(shared_material())
     ob = bpy.data.objects.new("acc_" + name, me)
     bpy.context.scene.collection.objects.link(ob)
-    skin(ob, arm, [(bone, list(range(len(p.verts))))])
+    skin(ob, arm, [(bone, list(range(len(p.verts))))], bevel=0.012)
     ob["accessory"] = name
     return ob
 

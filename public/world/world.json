@@ -32,7 +32,12 @@
     -0.0
    ],
    "radius": 5.57,
-   "boxes": 55
+   "boxes": 55,
+   "lm": {
+    "file": "world/lm/region_00.webp",
+    "scale": 5.20552,
+    "res": 512
+   }
   },
   {
    "id": 1,
@@ -65,7 +70,12 @@
     0.099
    ],
    "radius": 5.56,
-   "boxes": 50
+   "boxes": 50,
+   "lm": {
+    "file": "world/lm/region_01.webp",
+    "scale": 5.07727,
+    "res": 512
+   }
   },
   {
    "id": 2,
@@ -98,7 +108,12 @@
     -6.0
    ],
    "radius": 6.32,
-   "boxes": 47
+   "boxes": 47,
+   "lm": {
+    "file": "world/lm/region_02.webp",
+    "scale": 5.22704,
+    "res": 512
+   }
   },
   {
    "id": 3,
@@ -142,7 +157,12 @@
     -6.0
    ],
    "radius": 6.06,
-   "boxes": 49
+   "boxes": 49,
+   "lm": {
+    "file": "world/lm/region_03.webp",
+    "scale": 5.15242,
+    "res": 512
+   }
   },
   {
    "id": 4,
@@ -175,7 +195,12 @@
     -0.126
    ],
    "radius": 5.18,
-   "boxes": 63
+   "boxes": 63,
+   "lm": {
+    "file": "world/lm/region_04.webp",
+    "scale": 5.07707,
+    "res": 512
+   }
   },
   {
    "id": 5,
@@ -208,7 +233,12 @@
     -6.264
    ],
    "radius": 5.54,
-   "boxes": 99
+   "boxes": 99,
+   "lm": {
+    "file": "world/lm/region_05.webp",
+    "scale": 4.99696,
+    "res": 512
+   }
   },
   {
    "id": 6,
@@ -241,7 +271,12 @@
     6.0
    ],
    "radius": 10.7,
-   "boxes": 159
+   "boxes": 159,
+   "lm": {
+    "file": "world/lm/region_06.webp",
+    "scale": 5.01192,
+    "res": 512
+   }
   },
   {
    "id": 7,
@@ -274,7 +309,12 @@
     -3.152
    ],
    "radius": 8.2,
-   "boxes": 34
+   "boxes": 34,
+   "lm": {
+    "file": "world/lm/region_07.webp",
+    "scale": 5.25923,
+    "res": 512
+   }
   },
   {
    "id": 8,
@@ -318,7 +358,12 @@
     -2.086
    ],
    "radius": 10.21,
-   "boxes": 44
+   "boxes": 44,
+   "lm": {
+    "file": "world/lm/region_08.webp",
+    "scale": 5.29334,
+    "res": 1024
+   }
   },
   {
    "id": 9,
@@ -362,7 +407,12 @@
     -8.0
    ],
    "radius": 9.43,
-   "boxes": 95
+   "boxes": 95,
+   "lm": {
+    "file": "world/lm/region_09.webp",
+    "scale": 5.04473,
+    "res": 512
+   }
   },
   {
    "id": 10,
@@ -406,7 +456,12 @@
     -13.0
    ],
    "radius": 6.05,
-   "boxes": 77
+   "boxes": 77,
+   "lm": {
+    "file": "world/lm/region_10.webp",
+    "scale": 5.28571,
+    "res": 512
+   }
   },
   {
    "id": 11,
@@ -445,7 +500,12 @@
     9.0
    ],
    "radius": 8.05,
-   "boxes": 91
+   "boxes": 91,
+   "lm": {
+    "file": "world/lm/region_11.webp",
+    "scale": 5.24942,
+    "res": 512
+   }
   },
   {
    "id": 12,
@@ -484,7 +544,12 @@
     3.0
    ],
    "radius": 7.02,
-   "boxes": 60
+   "boxes": 60,
+   "lm": {
+    "file": "world/lm/region_12.webp",
+    "scale": 5.25118,
+    "res": 512
+   }
   },
   {
    "id": 13,
@@ -528,7 +593,12 @@
     -14.025
    ],
    "radius": 9.41,
-   "boxes": 119
+   "boxes": 119,
+   "lm": {
+    "file": "world/lm/region_13.webp",
+    "scale": 5.07366,
+    "res": 512
+   }
   },
   {
    "id": 14,
@@ -561,7 +631,12 @@
     -16.172
    ],
    "radius": 10.54,
-   "boxes": 88
+   "boxes": 88,
+   "lm": {
+    "file": "world/lm/region_14.webp",
+    "scale": 5.07615,
+    "res": 512
+   }
   },
   {
    "id": 15,
@@ -594,7 +669,12 @@
     -16.0
    ],
    "radius": 8.83,
-   "boxes": 70
+   "boxes": 70,
+   "lm": {
+    "file": "world/lm/region_15.webp",
+    "scale": 5.20042,
+    "res": 512
+   }
   },
   {
    "id": 16,
@@ -627,7 +707,12 @@
     -22.53
    ],
    "radius": 15.0,
-   "boxes": 91
+   "boxes": 91,
+   "lm": {
+    "file": "world/lm/region_16.webp",
+    "scale": 4.97601,
+    "res": 1024
+   }
   },
   {
    "id": 17,
@@ -660,7 +745,12 @@
     -20.647
    ],
    "radius": 9.95,
-   "boxes": 61
+   "boxes": 61,
+   "lm": {
+    "file": "world/lm/region_17.webp",
+    "scale": 5.16474,
+    "res": 512
+   }
   },
   {
    "id": 18,
@@ -699,7 +789,12 @@
     -23.075
    ],
    "radius": 5.22,
-   "boxes": 62
+   "boxes": 62,
+   "lm": {
+    "file": "world/lm/region_18.webp",
+    "scale": 4.97521,
+    "res": 256
+   }
   },
   {
    "id": 19,
@@ -732,7 +827,12 @@
     -22.0
    ],
    "radius": 6.27,
-   "boxes": 68
+   "boxes": 68,
+   "lm": {
+    "file": "world/lm/region_19.webp",
+    "scale": 5.33312,
+    "res": 512
+   }
   },
   {
    "id": 20,
@@ -776,7 +876,12 @@
     -15.147
    ],
    "radius": 5.7,
-   "boxes": 74
+   "boxes": 74,
+   "lm": {
+    "file": "world/lm/region_20.webp",
+    "scale": 5.45259,
+    "res": 512
+   }
   },
   {
    "id": 21,
@@ -815,7 +920,12 @@
     -15.0
    ],
    "radius": 8.58,
-   "boxes": 80
+   "boxes": 80,
+   "lm": {
+    "file": "world/lm/region_21.webp",
+    "scale": 5.18181,
+    "res": 512
+   }
   },
   {
    "id": 22,
@@ -859,7 +969,12 @@
     -22.5
    ],
    "radius": 6.55,
-   "boxes": 35
+   "boxes": 35,
+   "lm": {
+    "file": "world/lm/region_22.webp",
+    "scale": 5.15672,
+    "res": 512
+   }
   },
   {
    "id": 23,
@@ -892,7 +1007,12 @@
     -9.0
    ],
    "radius": 6.05,
-   "boxes": 111
+   "boxes": 111,
+   "lm": {
+    "file": "world/lm/region_23.webp",
+    "scale": 5.26636,
+    "res": 512
+   }
   },
   {
    "id": 24,
@@ -931,7 +1051,12 @@
     -8.0
    ],
    "radius": 6.05,
-   "boxes": 52
+   "boxes": 52,
+   "lm": {
+    "file": "world/lm/region_24.webp",
+    "scale": 5.24349,
+    "res": 512
+   }
   },
   {
    "id": 25,
@@ -970,7 +1095,12 @@
     9.005
    ],
    "radius": 10.24,
-   "boxes": 115
+   "boxes": 115,
+   "lm": {
+    "file": "world/lm/region_25.webp",
+    "scale": 5.17922,
+    "res": 1024
+   }
   },
   {
    "id": 26,
@@ -1149,7 +1279,12 @@
     9.155
    ],
    "radius": 9.5,
-   "boxes": 212
+   "boxes": 212,
+   "lm": {
+    "file": "world/lm/region_26.webp",
+    "scale": 4.88307,
+    "res": 1024
+   }
   },
   {
    "id": 27,
@@ -1188,7 +1323,12 @@
     18.855
    ],
    "radius": 10.8,
-   "boxes": 64
+   "boxes": 64,
+   "lm": {
+    "file": "world/lm/region_27.webp",
+    "scale": 5.27638,
+    "res": 512
+   }
   },
   {
    "id": 28,
@@ -1232,7 +1372,12 @@
     7.125
    ],
    "radius": 6.76,
-   "boxes": 43
+   "boxes": 43,
+   "lm": {
+    "file": "world/lm/region_28.webp",
+    "scale": 5.24226,
+    "res": 512
+   }
   },
   {
    "id": 29,
@@ -1265,7 +1410,8 @@
     19.8
    ],
    "radius": 17.0,
-   "boxes": 138
+   "boxes": 138,
+   "lm": null
   },
   {
    "id": 30,
@@ -1304,7 +1450,12 @@
     20.0
    ],
    "radius": 17.0,
-   "boxes": 181
+   "boxes": 181,
+   "lm": {
+    "file": "world/lm/region_30.webp",
+    "scale": 5.10936,
+    "res": 512
+   }
   }
  ],
  "center": [

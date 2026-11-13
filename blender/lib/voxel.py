@@ -60,8 +60,33 @@ P = {
 }
 
 
+# Physically based surface response per palette entry: (roughness, metalness)
+PBR = {
+    "water": (0.06, 0.0), "water2": (0.1, 0.0), "sky": (0.05, 0.0),
+    "steel": (0.32, 0.85), "dark": (0.45, 0.2), "charcoal": (0.55, 0.0),
+    "white": (0.55, 0.0), "snow": (0.5, 0.0), "chalk": (0.9, 0.0),
+    "wood": (0.72, 0.0), "wood2": (0.7, 0.0), "roof": (0.62, 0.0), "roof2": (0.62, 0.0),
+    "clay": (0.5, 0.0), "yellow": (0.45, 0.0), "mustard": (0.5, 0.0), "red": (0.42, 0.0),
+    "teal": (0.5, 0.0), "blue": (0.45, 0.0), "lilac": (0.6, 0.0), "pink": (0.6, 0.0),
+    "rock": (0.88, 0.0), "rock2": (0.9, 0.0), "rock3": (0.92, 0.0),
+    "grass": (0.95, 0.0), "grass2": (0.95, 0.0), "grass3": (0.95, 0.0),
+    "leaf": (0.8, 0.0), "leaf2": (0.8, 0.0), "leaf3": (0.8, 0.0),
+    "sand": (0.95, 0.0), "path": (0.85, 0.0), "cream": (0.8, 0.0), "cream2": (0.82, 0.0),
+}
+
+
+def srgb_to_linear(v):
+    return v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4
+
+
 def col(c):
-    return P[c] if isinstance(c, str) else c
+    """Palette values are authored in sRGB; meshes store linear colour."""
+    rgb = P[c] if isinstance(c, str) else c
+    return tuple(srgb_to_linear(v) for v in rgb)
+
+
+def pbr(c, default=(0.78, 0.0)):
+    return PBR.get(c, default) if isinstance(c, str) else default
 
 
 class Part:
@@ -75,6 +100,7 @@ class Part:
         self.faces = []
         self.cols = []   # per face corner
         self.drops = []  # per face corner
+        self.pbrs = []   # per face corner (roughness, metalness)
 
     def empty(self):
         return not self.faces
@@ -89,6 +115,9 @@ class Builder:
         self.parts = {"static": Part(name + "_static"), "glow": Part(name + "_glow")}
         self.z_min, self.z_max = z_min, z_max
         self.stats = 0
+        self.bevel = 0.035   # chamfer width on every box edge
+        self.segments = 1
+        self.uv = True       # lightmap UVs for the static mesh
 
     # ------------------------------------------------------------------ parts
     def part(self, key, pivot=(0, 0, 0), **extras):
@@ -98,7 +127,7 @@ class Builder:
 
     # ------------------------------------------------------------------ boxes
     def box(self, x0, y0, z0, x1, y1, z1, c, part="static", jitter=0.025,
-            ao=0.80, drop=None, top=None, skip_bottom=False):
+            ao=0.93, drop=None, top=None, skip_bottom=False, rough=None):
         """Axis-aligned box from corner (x0,y0,z0) to (x1,y1,z1)."""
         if x0 > x1:
             x0, x1 = x1, x0
@@ -111,6 +140,7 @@ class Builder:
         j = 1.0 + self.rng.uniform(-jitter, jitter)
         cc = tuple(min(1.0, v * j) for v in base)
         tc = col(top) if top else cc
+        rm = rough if rough is not None else pbr(c)
         if drop is None:
             # bottom-up reveal order with a little shuffle; normalised per region in build()
             drop = ("z", z0, self.rng.uniform(0, 1))
@@ -140,6 +170,7 @@ class Builder:
                 else:
                     p.cols.append(dark if k < 4 else cc)
                 p.drops.append(drop)
+                p.pbrs.append(rm)
         self.stats += 1
         return self
 
@@ -307,6 +338,8 @@ class Builder:
                 ca.data[li].color = (c[0], c[1], c[2], 1.0)
             da = me.attributes.new("_drop", "FLOAT", "CORNER")
             da.data.foreach_set("value", p.drops)
+            pa = me.attributes.new("_pbr", "FLOAT2", "CORNER")
+            pa.data.foreach_set("vector", [v for rm in p.pbrs for v in rm])
             me.color_attributes.active_color = ca
             me.color_attributes.render_color_index = 0
             me.materials.append(shared_material())
@@ -318,7 +351,123 @@ class Builder:
             for k, v in p.extras.items():
                 ob[k] = v
             (collection or bpy.context.scene.collection).objects.link(ob)
+            finish_mesh(ob, bevel=self.bevel, segments=self.segments, uv=(key == "static" and self.uv))
         return root
+
+
+def finish_mesh(ob, bevel=0.035, segments=1, uv=False):
+    """Bevel every box edge (edges catch the light), smooth the chamfers, unwrap UVs."""
+    import math as _m
+    if bevel > 0:
+        mod = ob.modifiers.new("Bevel", "BEVEL")
+        mod.width = bevel
+        mod.segments = segments
+        mod.limit_method = "ANGLE"
+        mod.angle_limit = _m.radians(40)
+        mod.use_clamp_overlap = True
+        mod.harden_normals = True
+        mod.miter_outer = "MITER_ARC"
+        dg = bpy.context.evaluated_depsgraph_get()
+        me = bpy.data.meshes.new_from_object(ob.evaluated_get(dg), preserve_all_data_layers=True,
+                                             depsgraph=dg)
+        ob.modifiers.clear()
+        old = ob.data
+        ob.data = me
+        bpy.data.meshes.remove(old)
+    else:
+        ob.data.shade_flat()
+    if uv:
+        me = ob.data
+        if not me.uv_layers:
+            me.uv_layers.new(name="UVMap")
+        bpy.ops.object.select_all(action="DESELECT")
+        bpy.context.view_layer.objects.active = ob
+        ob.select_set(True)
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.uv.smart_project(angle_limit=_m.radians(60), island_margin=0.004, area_weight=0.0,
+                                 scale_to_bounds=False)
+        bpy.ops.object.mode_set(mode="OBJECT")
+
+
+def surface_area(ob):
+    return sum(p.area for p in ob.data.polygons)
+
+
+def bake_lightmap(ob, path, res, samples=96):
+    """Path-trace sky light + bounces (no sun: the browser does direct sun) into a lightmap.
+
+    Returns the scale factor needed to decode the 8-bit image back to irradiance.
+    """
+    import numpy as np
+    sc = bpy.context.scene
+    sc.render.engine = "CYCLES"
+    sc.cycles.device = "CPU"
+    sc.cycles.samples = samples
+    sc.cycles.max_bounces = 4
+    sc.cycles.diffuse_bounces = 3
+    sc.render.bake.margin = 6
+    ensure_sky()
+    img = bpy.data.images.new(ob.name + "_lm", res, res, float_buffer=True)
+    mat = ob.data.materials[0].copy()
+    ob.data.materials[0] = mat
+    nt = mat.node_tree
+    tn = nt.nodes.new("ShaderNodeTexImage")
+    tn.image = img
+    nt.nodes.active = tn
+    bpy.ops.object.select_all(action="DESELECT")
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    bpy.ops.object.bake(type="DIFFUSE", pass_filter={"DIRECT", "INDIRECT"}, margin=6, use_clear=True)
+    px = np.array(img.pixels[:], dtype=np.float32).reshape(res, res, 4)
+    rgb = px[..., :3]
+    # light denoise: 3x3 box blur (lightmaps are low frequency; margins absorb bleed)
+    pad = np.pad(rgb, ((1, 1), (1, 1), (0, 0)), mode="edge")
+    rgb = sum(pad[dy:dy + res, dx:dx + res] for dy in range(3) for dx in range(3)) / 9.0
+    lum = rgb.mean(axis=2)
+    ref = float(np.percentile(lum[lum > 1e-4], 98)) if (lum > 1e-4).any() else 1.0
+    scale = max(ref / 0.92, 1e-4)
+    enc = np.clip(rgb / scale, 0, 1) ** (1 / 2.2)  # gamma-encode for 8-bit precision
+    out = np.concatenate([enc, np.ones((res, res, 1), np.float32)], axis=2)
+    save = bpy.data.images.new(ob.name + "_lm8", res, res, alpha=False)
+    save.pixels.foreach_set(out.ravel())
+    save.file_format = "WEBP"
+    save.save(filepath=path, quality=82)
+    # restore the shared material so the exporter sees the plain vertex-colour setup
+    ob.data.materials[0] = shared_material()
+    bpy.data.materials.remove(mat)
+    bpy.data.images.remove(img)
+    bpy.data.images.remove(save)
+    return round(scale, 5)
+
+
+def ensure_sky(elevation_deg=48.0, strength=1.0, backdrop=(1.05, 0.97, 0.84)):
+    """Physical sky for lighting; camera rays see a warm studio backdrop instead."""
+    sc = bpy.context.scene
+    if sc.world and sc.world.get("clawd_sky"):
+        return
+    w = bpy.data.worlds.new("sky")
+    w["clawd_sky"] = 1
+    nt = w.node_tree
+    out = nt.nodes["World Output"]
+    bg = nt.nodes["Background"]
+    sky = nt.nodes.new("ShaderNodeTexSky")
+    sky.sky_type = "MULTIPLE_SCATTERING"
+    sky.sun_disc = False
+    sky.sun_elevation = math.radians(elevation_deg)
+    sky.sun_rotation = math.radians(35)
+    nt.links.new(sky.outputs["Color"], bg.inputs["Color"])
+    bg.inputs["Strength"].default_value = strength
+    back = nt.nodes.new("ShaderNodeBackground")
+    back.inputs["Color"].default_value = (*backdrop, 1.0)
+    back.inputs["Strength"].default_value = 1.0
+    lp = nt.nodes.new("ShaderNodeLightPath")
+    mix = nt.nodes.new("ShaderNodeMixShader")
+    nt.links.new(lp.outputs["Is Camera Ray"], mix.inputs[0])
+    nt.links.new(bg.outputs[0], mix.inputs[1])
+    nt.links.new(back.outputs[0], mix.inputs[2])
+    nt.links.new(mix.outputs[0], out.inputs["Surface"])
+    sc.world = w
 
 
 _MAT = None
@@ -366,7 +515,7 @@ def export_glb(root, path, animations=False):
         export_attributes=True,
         export_vertex_color="ACTIVE",
         export_normals=True,
-        export_texcoords=False,
+        export_texcoords=True,
         export_tangents=False,
         export_cameras=False,
         export_lights=False,

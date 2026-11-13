@@ -55,13 +55,14 @@ export class Clawd {
     const c = document.createElement('canvas');
     c.width = c.height = 64;
     const g = c.getContext('2d')!;
-    const grd = g.createRadialGradient(32, 32, 2, 32, 32, 32);
-    grd.addColorStop(0, 'rgba(40,30,20,0.45)');
-    grd.addColorStop(1, 'rgba(40,30,20,0)');
+    const grd = g.createRadialGradient(32, 32, 4, 32, 32, 32);
+    grd.addColorStop(0, 'rgba(30,22,16,0.62)');
+    grd.addColorStop(0.55, 'rgba(30,22,16,0.32)');
+    grd.addColorStop(1, 'rgba(30,22,16,0)');
     g.fillStyle = grd;
     g.fillRect(0, 0, 64, 64);
     this.shadow = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.2, 1.6),
+      new THREE.PlaneGeometry(1.9, 1.2),
       new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }),
     );
     this.shadow.rotation.x = -Math.PI / 2;

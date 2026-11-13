@@ -4,7 +4,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { Clawd, type Accessory, type Clip } from './clawd';
-import { makeRegionMaterials, type RevealUniforms } from './materials';
+import { cloneGlow, makeRegionMaterials, type RevealUniforms } from './materials';
+import { SkyEnv } from './sky';
+import { PostFX, type Tier } from './postfx';
 
 export interface RegionMeta {
   id: number;
@@ -21,6 +23,7 @@ export interface RegionMeta {
   acc: Accessory | null;
   focus: number[];
   radius: number;
+  lm: { file: string; scale: number; res: number } | null;
 }
 
 interface Manifest {
@@ -45,6 +48,7 @@ interface Region {
   group: THREE.Group;
   u: RevealUniforms;
   glow: THREE.MeshBasicMaterial;
+  baked: THREE.MeshStandardMaterial;
   nightOnly: THREE.Mesh[];
   anims: Animated[];
   revealing: number; // seconds into reveal, -1 when done
@@ -54,6 +58,8 @@ export type Mood = 'idle' | 'focus' | 'break';
 
 const v3 = (a: number[]) => new THREE.Vector3(a[0], a[1], a[2]);
 const lowPowerFps = 30;
+// lightMapIntensity per unit of the bake's encode scale (tuned against the real-time sun)
+const LM_GAIN = 0.25;
 
 export class World {
   readonly renderer: THREE.WebGLRenderer;
@@ -68,6 +74,11 @@ export class World {
   private prevT = 0;
   private elapsed = 0;
   private sun: THREE.DirectionalLight;
+  private skyEnv: SkyEnv;
+  private post: PostFX;
+  private tier: Tier = 'high';
+  private texLoader = new THREE.TextureLoader();
+  private lightmaps = new Map<number, Promise<THREE.Texture | null>>();
   private hemi: THREE.HemisphereLight;
   private sky = new THREE.Color();
   private fog: THREE.Fog;
@@ -92,6 +103,9 @@ export class World {
   constructor(private canvas: HTMLCanvasElement) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.info.autoReset = false; // count every pass of the frame
+    this.renderer.toneMapping = THREE.NeutralToneMapping; // keeps the palette's true colours
+    this.renderer.toneMappingExposure = 1.0;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.renderer.shadowMap.autoUpdate = false;
@@ -118,11 +132,13 @@ export class World {
       this.followClawd = false;
     });
 
-    this.hemi = new THREE.HemisphereLight(0xfff4e6, 0xb9a78f, 1.3);
+    // baked lightmaps carry the sky light now; the hemisphere only lifts moving parts a touch
+    this.hemi = new THREE.HemisphereLight(0xfff4e6, 0xb9a78f, 0.35);
     this.scene.add(this.hemi);
     this.sun = new THREE.DirectionalLight(0xfff1dc, 1.9);
     this.sun.castShadow = true;
-    this.sun.shadow.mapSize.set(2048, 2048);
+    this.sun.shadow.mapSize.set(4096, 4096);
+    this.sun.shadow.radius = 3;
     this.sun.shadow.bias = -0.0008;
     this.sun.shadow.normalBias = 0.03;
     const sc = this.sun.shadow.camera;
@@ -140,6 +156,8 @@ export class World {
     this.loader = new GLTFLoader();
     this.loader.setMeshoptDecoder(MeshoptDecoder);
 
+    this.skyEnv = new SkyEnv(this.renderer);
+    this.post = new PostFX(this.renderer, this.scene, this.camera);
     window.addEventListener('resize', () => this.resize());
     document.addEventListener('visibilitychange', () => (document.hidden ? this.stop() : this.start()));
     this.resize();
@@ -190,16 +208,48 @@ export class World {
     return this.pending.get(i)!;
   }
 
+  /** Path-traced (Cycles) sky light + bounces, baked in Blender. */
+  private loadLightmap(i: number): Promise<THREE.Texture | null> {
+    if (!this.lightmaps.has(i)) {
+      const lm = this.meta(i).lm;
+      this.lightmaps.set(
+        i,
+        lm
+          ? this.texLoader.loadAsync(lm.file).then(
+              (t) => {
+                t.flipY = false;
+                t.colorSpace = THREE.SRGBColorSpace; // stored gamma-encoded for 8-bit precision
+                t.channel = 0;
+                t.anisotropy = 4;
+                return t;
+              },
+              () => null,
+            )
+          : Promise.resolve(null),
+      );
+    }
+    return this.lightmaps.get(i)!;
+  }
+
   /** Download + decode the next region during focus so the reveal starts instantly. */
   prefetch(i: number) {
     if (!this.manifest || i > this.maxRegion || i < 0) return;
     void this.loadRegion(i).catch(() => this.pending.delete(i));
+    void this.loadLightmap(i);
   }
 
   private async addRegion(i: number, revealed: boolean) {
     if (this.regions.has(i) || i > this.maxRegion) return this.regions.get(i);
-    const group = await this.loadRegion(i);
-    const { u, solid, glow } = makeRegionMaterials(revealed);
+    const [group, lightmap] = await Promise.all([this.loadRegion(i), this.loadLightmap(i)]);
+    const { u, baked, solid, glow } = makeRegionMaterials(revealed);
+    if (lightmap) {
+      baked.lightMap = lightmap;
+      baked.userData.lmBase = (this.meta(i).lm?.scale ?? 5) * LM_GAIN;
+      baked.lightMapIntensity = baked.userData.lmBase;
+    } else {
+      baked.envMapIntensity = 1.0;
+      baked.userData.lmBase = 0;
+    }
     const anims: Animated[] = [];
     const nightOnly: THREE.Mesh[] = [];
     const meshes: THREE.Mesh[] = [];
@@ -209,12 +259,10 @@ export class World {
     for (const mesh of meshes) {
       const ud = mesh.userData as Record<string, unknown>;
       const isGlow = ud.part === 'glow' || ud.glow === 1;
-      let mat: THREE.Material = isGlow ? glow : solid;
+      let mat: THREE.Material = isGlow ? glow : ud.part === 'static' && lightmap ? baked : solid;
       if (ud.anim === 'pulse' || ud.night === 1) {
         // own material so it can flicker / fade independently
-        const pm = glow.clone();
-        pm.onBeforeCompile = glow.onBeforeCompile;
-        pm.customProgramCacheKey = glow.customProgramCacheKey;
+        const pm = cloneGlow(glow);
         if (ud.night === 1) {
           pm.transparent = true;
           pm.depthWrite = false;
@@ -245,7 +293,7 @@ export class World {
         });
       }
     }
-    const r: Region = { meta: this.meta(i), group, u, glow, nightOnly, anims, revealing: revealed ? -1 : 0 };
+    const r: Region = { meta: this.meta(i), group, u, glow, baked, nightOnly, anims, revealing: revealed ? -1 : 0 };
     this.regions.set(i, r);
     this.scene.add(group);
     this.applyNightTo(r);
@@ -443,21 +491,26 @@ export class World {
     const sky = night < 0.5 ? day.clone().lerp(dusk, night * 2) : dusk.clone().lerp(deep, (night - 0.5) * 2);
     this.sky.copy(sky);
     this.fog.color.copy(sky);
-    this.hemi.intensity = THREE.MathUtils.lerp(1.3, 0.5, night);
+    this.hemi.intensity = THREE.MathUtils.lerp(0.35, 0.25, night);
     this.hemi.color.set(night > 0.5 ? 0x9fb2e6 : 0xfff4e6);
     this.hemi.groundColor.set(night > 0.5 ? 0x3b3550 : 0xb9a78f);
-    this.sun.intensity = THREE.MathUtils.lerp(1.9, 0.45, night);
+    this.sun.intensity = THREE.MathUtils.lerp(3.5, 0.55, night);
     this.sun.color.set(night > 0.5 ? 0xa9bdff : night > 0.1 ? 0xffd2a6 : 0xfff1dc);
     const ang = THREE.MathUtils.lerp(0.9, 0.55, night);
     this.sun.position.set(Math.cos(ang) * 40, 60, Math.sin(ang) * 50);
     this.sun.target.position.set(0, 0, 0);
+    const env = this.skyEnv.update(night, this.sun.position);
+    if (env) this.scene.environment = env;
+    this.post.setNight(night);
     for (const r of this.regions.values()) this.applyNightTo(r);
     this.shadowDirty = true;
   }
 
   private applyNightTo(r: Region) {
     const n = Math.max(0, this.nightT);
-    r.glow.color.setScalar(THREE.MathUtils.lerp(0.82, 1.0, n));
+    // HDR glow at night so bloom picks up windows and lamps
+    r.glow.color.setScalar(THREE.MathUtils.lerp(0.9, 2.6, n));
+    r.baked.lightMapIntensity = (r.baked.userData.lmBase as number) * THREE.MathUtils.lerp(1, 0.22, n);
     // aurora + stars only come out after dusk
     const vis = THREE.MathUtils.smoothstep(n, 0.35, 0.9);
     for (const m of r.nightOnly) {
@@ -483,9 +536,14 @@ export class World {
     this.lowPower = on;
     this.renderer.shadowMap.enabled = !on;
     this.dpr = on ? 1 : this.dprCap;
-    this.renderer.setPixelRatio(this.dpr);
+    this.setTier(on ? 'low' : 'high');
     this.shadowDirty = true;
     this.resize();
+  }
+
+  private setTier(t: Tier) {
+    this.tier = t;
+    this.post.setTier(t);
   }
 
   private frame(t: number) {
@@ -534,7 +592,8 @@ export class World {
       this.renderer.shadowMap.needsUpdate = true;
       this.shadowDirty = false;
     }
-    this.renderer.render(this.scene, this.camera);
+    this.renderer.info.reset();
+    this.post.render(dt, time);
     this.adapt(frameMs);
   }
 
@@ -545,19 +604,29 @@ export class World {
     if (this.frameTimes.length < 90) return;
     const avg = this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length;
     this.frameTimes.length = 0;
+    // first trade resolution, then effects; climb back the same way
     let next = this.dpr;
-    if (avg > 20 && this.dpr > 1) next = Math.max(1, this.dpr - 0.25);
-    else if (avg < 13 && this.dpr < this.dprCap) next = Math.min(this.dprCap, this.dpr + 0.25);
+    if (avg > 20) {
+      if (this.dpr > 1) next = Math.max(1, this.dpr - 0.25);
+      else if (this.tier === 'high') this.setTier('medium');
+      else if (this.tier === 'medium') this.setTier('low');
+    } else if (avg < 12) {
+      if (this.tier === 'low') this.setTier('medium');
+      else if (this.tier === 'medium') this.setTier('high');
+      else if (this.dpr < this.dprCap) next = Math.min(this.dprCap, this.dpr + 0.25);
+    }
     if (next !== this.dpr) {
       this.dpr = next;
-      this.renderer.setPixelRatio(next);
+      this.resize();
     }
   }
 
   resize() {
     const w = this.canvas.clientWidth || window.innerWidth;
     const h = this.canvas.clientHeight || window.innerHeight;
+    this.renderer.setPixelRatio(this.dpr);
     this.renderer.setSize(w, h, false);
+    this.post?.setSize(w, h, this.dpr);
     this.camera.aspect = w / h;
     this.camera.fov = w < 700 ? 42 : 32;
     this.camera.updateProjectionMatrix();
@@ -565,7 +634,7 @@ export class World {
 
   stats() {
     const i = this.renderer.info;
-    return { calls: i.render.calls, triangles: i.render.triangles, geometries: i.memory.geometries, dpr: this.dpr };
+    return { calls: i.render.calls, triangles: i.render.triangles, geometries: i.memory.geometries, dpr: this.dpr, tier: this.tier };
   }
 }
 

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "world": "bash scripts/build-world.sh"
+    "world": "bash scripts/build-world.sh",
+    "postcards": ".bpy/bin/python blender/postcards.py public/postcards --samples 96 --size 800x500 && .bpy/bin/python blender/postcards.py public/postcards --hero --samples 128 --size 1600x900"
   },
   "dependencies": {
     "three": "^0.187.0"

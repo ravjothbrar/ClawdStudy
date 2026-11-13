@@ -29,6 +29,7 @@ app.innerHTML = `
   <div class="cam-buttons">
     <button class="chip" id="btn-clawd" title="Find Clawd (C)">find clawd</button>
     <button class="chip" id="btn-overview" title="Overview (O)">overview</button>
+    <button class="chip" id="btn-album" title="Postcards (P)">album</button>
     <button class="chip icon" id="btn-settings" title="Settings" aria-label="Settings">⚙</button>
   </div>
 </section>
@@ -100,8 +101,25 @@ app.innerHTML = `
   </form>
 </dialog>
 
+<dialog id="album" class="panel wide">
+  <form method="dialog">
+    <div class="eyebrow"><span>Postcards</span><span id="album-count"></span></div>
+    <h2>Every place you've built, path-traced in Blender.</h2>
+    <div class="album-grid" id="album-grid"></div>
+    <div class="row end"><button class="primary" value="close">close</button></div>
+  </form>
+</dialog>
+
+<dialog id="photo" class="photo">
+  <form method="dialog">
+    <img id="photo-img" alt="" />
+    <div class="photo-cap"><span id="photo-title"></span><button class="chip" value="close">close</button></div>
+  </form>
+</dialog>
+
 <dialog id="intro" class="panel">
   <form method="dialog">
+    <img class="hero" src="postcards/hero.jpg" alt="Clawd's Archipelago, fully built" onerror="this.remove()" />
     <div class="eyebrow"><span>Welcome</span><span>${CLAWD_SVG}</span></div>
     <h2>Every focus block builds the world.</h2>
     <p>Finish a pomodoro and a new piece of <b>Clawd's Archipelago</b> is built: a café, a lighthouse, a mountain, eventually the moon. Give up halfway and nothing gets built.</p>
@@ -209,7 +227,7 @@ function onComplete(mode: Mode, minutes: number) {
     if (after > before && world) {
       const m = world.meta(after);
       notify(`Built: ${m.title}`, m.blurb);
-      toast(`New in ${m.chapter} · ${after}/${TOTAL}`, `<b>${m.title}</b><br>${m.blurb}`, 7000);
+      toast(`New in ${m.chapter} · ${after}/${TOTAL}`, `<b>${m.title}</b><br>${m.blurb}`, 9000, postcard(after));
       world.setMood('break');
       void world.reveal(after).then(renderWorldCard);
     } else {
@@ -307,9 +325,14 @@ $('task-list').addEventListener('click', (e) => {
 
 // --------------------------------------------------------------- toast
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
-function toast(title: string, body = '', ms = 5000) {
+function postcard(i: number) {
+  return `postcards/region_${String(i).padStart(2, '0')}.jpg`;
+}
+
+function toast(title: string, body = '', ms = 5000, img = '') {
   const el = $('toast');
-  el.innerHTML = `<div class="eyebrow"><span>${title}</span></div>${body ? `<div class="body">${body}</div>` : ''}`;
+  el.innerHTML = `${img ? `<img class="toast-img" src="${img}" alt="" onerror="this.remove()" />` : ''}<div class="eyebrow"><span>${title}</span></div>${body ? `<div class="body">${body}</div>` : ''}`;
+  el.classList.toggle('has-img', Boolean(img));
   el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), ms);
@@ -348,6 +371,7 @@ window.addEventListener('keydown', (e) => {
   } else if (e.key === 'c') world?.focusClawd();
   else if (e.key === 'o') world?.frameOverview();
   else if (e.key === 'm') fm.toggle($('video'));
+  else if (e.key === 'p' && manifest.length) openAlbum();
 });
 
 // --------------------------------------------------------------- radio
@@ -421,6 +445,29 @@ $('btn-wipe').addEventListener('click', async () => {
   store.reset();
   await world?.setUnlocked(0);
   renderAll();
+});
+
+// --------------------------------------------------------------- album
+function openAlbum() {
+  const n = unlockedCount();
+  $('album-count').textContent = `${n + 1} of ${TOTAL + 1}`;
+  $('album-grid').innerHTML = manifest
+    .map((m) =>
+      m.id <= n
+        ? `<button type="button" class="card" data-i="${m.id}"><img loading="lazy" src="${postcard(m.id)}" alt="${m.title}" onerror="this.style.visibility='hidden'" /><span>${m.title}</span><small>${m.chapter}</small></button>`
+        : `<div class="card locked"><div class="lock">${CLAWD_SVG}</div><span>???</span><small>${m.chapter}</small></div>`,
+    )
+    .join('');
+  $<HTMLDialogElement>('album').showModal();
+}
+$('btn-album').addEventListener('click', openAlbum);
+$('album-grid').addEventListener('click', (e) => {
+  const card = (e.target as HTMLElement).closest<HTMLElement>('.card[data-i]');
+  if (!card) return;
+  const m = manifest[Number(card.dataset.i)];
+  $<HTMLImageElement>('photo-img').src = postcard(m.id);
+  $('photo-title').innerHTML = `<b>${m.title}</b> · ${m.blurb}`;
+  $<HTMLDialogElement>('photo').showModal();
 });
 
 // --------------------------------------------------------------- debug

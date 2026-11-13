@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from lib.voxel import Builder, export_glb, reset_scene  # noqa: E402
+from lib.voxel import Builder, bake_lightmap, export_glb, reset_scene, surface_area  # noqa: E402
 from regions import REGIONS  # noqa: E402
 
 
@@ -35,16 +35,29 @@ def bounds(b):
 def main():
     out = Path(sys.argv[1])
     manifest = Path(sys.argv[2])
-    only = int(sys.argv[3]) if len(sys.argv) > 3 else None
+    only = int(sys.argv[3]) if len(sys.argv) > 3 and sys.argv[3] != "-" else None
+    lm_dir = Path(sys.argv[4]) if len(sys.argv) > 4 else None  # bake lightmaps when given
     out.mkdir(parents=True, exist_ok=True)
+    old = {}
+    if manifest.exists():
+        old = {r["id"]: r for r in json.loads(manifest.read_text())["regions"]}
     regions = []
     for i, r in enumerate(REGIONS):
         b = Builder(f"region_{i:02d}", seed=1000 + i)
         meta = r["fn"](b)
         lo, hi = bounds(b)
+        lm = old.get(i, {}).get("lm")
         if only is None or only == i:
             reset_scene()
             root = b.build()
+            static = next((o for o in root.children if o.get("part") == "static"), None)
+            if lm_dir and static is not None:
+                lm_dir.mkdir(parents=True, exist_ok=True)
+                area = surface_area(static)
+                res = 1024 if area > 900 else 512 if area > 160 else 256
+                scale = bake_lightmap(static, str(lm_dir / f"region_{i:02d}.webp"), res)
+                lm = dict(file=f"world/lm/region_{i:02d}.webp", scale=scale, res=res)
+                print(f"   lightmap {res}px area={area:.0f} scale={scale}")
             export_glb(root, str(out / f"region_{i:02d}.glb"))
         # focus: centre of the region's footprint, ignoring far-flung sky items
         c = ((lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, (lo[2] + hi[2]) / 2)
@@ -65,6 +78,7 @@ def main():
             focus=to3(meta["spot"]) if size > 30 else to3(c),
             radius=round(min(size, 30) / 2 + 2, 2),
             boxes=b.stats,
+            lm=lm,
         ))
         print(f"region {i:02d} {r['title']:<24} boxes={b.stats}")
     lo = [min(r["focus"][k] for r in regions) for k in range(3)]

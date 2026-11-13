@@ -451,3 +451,54 @@ body.running[data-mode='focus'] .tasks:not([open]) { opacity: 0.6; }
 body[data-night='1'] { background: #1d2233; }
 body[data-night='1'] .brand .name { color: #efe6d6; }
 body[data-night='1'] .brand .tag { color: #a9a2b8; }
+
+/* ---------------------------------------------------------------- postcards */
+.toast.has-img { padding-top: 10px; width: min(440px, calc(100vw - 32px)); }
+.toast-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background: #2a2723;
+}
+dialog.wide { max-width: min(980px, calc(100vw - 32px)); width: 100%; }
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+  max-height: 62vh;
+  overflow: auto;
+  padding: 2px;
+}
+.album-grid .card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: #fffaf2;
+  border-radius: 12px;
+  padding: 6px 6px 8px;
+  font-size: 14px;
+}
+.album-grid .card img, .album-grid .lock {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  background: var(--paper-2);
+}
+.album-grid .lock { display: grid; place-items: center; color: #cbbfae; }
+.album-grid .lock .px { width: 40px; }
+.album-grid .card small { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; }
+.album-grid button.card:hover { background: #fff; transform: translateY(-1px); }
+.album-grid .locked { opacity: 0.7; }
+dialog.photo { padding: 0; background: #141311; border-radius: 16px; max-width: min(1100px, calc(100vw - 24px)); }
+dialog.photo img { display: block; width: 100%; height: auto; }
+.photo-cap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; color: #d8cfc1; font-size: 15px; }
+.photo-cap b { color: #fff; font-weight: 500; }
+.photo-cap .chip { background: transparent; color: #efe6d6; border-color: rgba(255,255,255,0.2); }
+dialog .hero { display: block; width: calc(100% + 48px); margin: -22px -24px 14px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r) var(--r) 0 0; background: var(--paper-2); }
