@@ -84,7 +84,7 @@ body.ready #world { opacity: 1; }
   position: absolute;
   top: 16px;
   right: 16px;
-  width: 268px;
+  width: 304px;
   padding: 14px 16px 14px;
 }
 .world-count { font-size: 46px; line-height: 1; margin: 6px 0 8px; letter-spacing: -0.02em; }
@@ -124,6 +124,7 @@ body.ready #world { opacity: 1; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 .chip:hover { background: #fff; }
 .chip:active { transform: scale(0.97); }
@@ -502,3 +503,32 @@ dialog.photo img { display: block; width: 100%; height: auto; }
 .photo-cap b { color: #fff; font-weight: 500; }
 .photo-cap .chip { background: transparent; color: #efe6d6; border-color: rgba(255,255,255,0.2); }
 dialog .hero { display: block; width: calc(100% + 48px); margin: -22px -24px 14px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r) var(--r) 0 0; background: var(--paper-2); }
+
+/* ---------------------------------------------------------------- first load */
+.loading {
+  position: fixed;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-2);
+  background: color-mix(in oklab, var(--paper) 90%, transparent);
+  padding: 10px 16px;
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+body.ready .loading { opacity: 0; }
+.loading .spin {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--clay);
+  animation: hop 0.9s ease-in-out infinite;
+}
+@keyframes hop { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-5px) rotate(90deg) } }

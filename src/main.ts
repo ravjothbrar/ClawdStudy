@@ -247,7 +247,7 @@ function notify(title: string, body: string) {
   if (!store.state.settings.notify || !('Notification' in window) || Notification.permission !== 'granted') return;
   if (!document.hidden) return;
   try {
-    new Notification(title, { body, icon: '/favicon.svg', silent: true });
+    new Notification(title, { body, icon: 'favicon.svg', silent: true });
   } catch {
     /* some browsers only allow notifications from a service worker */
   }

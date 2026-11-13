@@ -6,16 +6,23 @@
   <title>ClawdStudy</title>
   <meta name="description" content="Study with Clawd and Claude FM. Every pomodoro you finish builds a new piece of Clawd's world." />
   <meta name="theme-color" content="#1b1916" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta property="og:title" content="ClawdStudy: study with Clawd and Claude FM" />
+  <meta property="og:description" content="A pomodoro timer where every focus block you finish builds a new piece of Clawd's world. Unofficial fan project." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ravjothbrar.github.io/ClawdStudy/" />
+  <meta property="og:image" content="https://ravjothbrar.github.io/ClawdStudy/postcards/hero.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <link rel="preload" href="/world/world.json" as="fetch" crossorigin />
-  <link rel="preload" href="/world/clawd.glb" as="fetch" crossorigin />
+  <link rel="preload" href="world/world.json" as="fetch" crossorigin />
+  <link rel="preload" href="world/clawd.glb" as="fetch" crossorigin />
 </head>
 <body>
   <canvas id="world" aria-label="Clawd's Archipelago, a 3D diorama that grows as you study"></canvas>
   <div id="app"></div>
+  <div class="loading" role="status"><span class="spin"></span>Building Clawd's world…</div>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
